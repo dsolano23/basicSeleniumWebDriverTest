@@ -1,4 +1,5 @@
 package com.dso.seleniumWebDriverTest.stepDefinition;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
@@ -26,7 +27,6 @@ public class LoginSteps {
     @When("^User Navigate to LogIn Page$")
     public void user_Navigate_to_LogIn_Page() throws Throwable {
         Hooks.getWebDriverWait().until(ExpectedConditions.elementToBeClickable(By.id(ConstantsIDKeyNames.SigIn_ToolTip))).click();
-        //TimeUnit.SECONDS.sleep(2);
     }
 }
 

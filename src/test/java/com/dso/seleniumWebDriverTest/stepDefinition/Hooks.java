@@ -4,10 +4,7 @@ package com.dso.seleniumWebDriverTest.stepDefinition;
  * 2018-07-24
  */
 
-import java.io.File;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.OutputType;
@@ -15,7 +12,9 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.dso.seleniumWebDriverTest.exception.NotFoundResourceException;
@@ -26,9 +25,7 @@ import com.dso.seleniumWebDriverTest.utilsType.PropertyConstantsNames;
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
-import net.masterthought.cucumber.Configuration;
-import net.masterthought.cucumber.ReportBuilder;
-import net.masterthought.cucumber.Reportable;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 
 public class Hooks {
@@ -88,39 +85,7 @@ public class Hooks {
     		destroyDriver();
     }
 
-	   @After(order=1)
-	    public void renerateHTMLReport() throws InterruptedException {
-	        LOGGER.debug("Wait 5 seconds init");
-	        TimeUnit.SECONDS.sleep(5);
-	        LOGGER.debug("Wait 5 seconds end");
-			File reportOutputDirectory = new File("target");
-			List<String> jsonFiles = new ArrayList<>();
-			jsonFiles.add("target/cucumber-usage.json");
-			//jsonFiles.add("cucumber-report-2.json");
 
-			String buildNumber = "1";
-			String projectName = "cucumberProject";
-			boolean runWithJenkins = false;
-			boolean parallelTesting = false;
-
-			Configuration configuration = new Configuration(reportOutputDirectory, projectName);
-			// optional configuration
-			
-			configuration.setParallelTesting(parallelTesting);
-			configuration.setRunWithJenkins(runWithJenkins);
-			configuration.setBuildNumber(buildNumber);
-			// addidtional metadata presented on main page
-			configuration.addClassifications("Platform", "Windows");
-			configuration.addClassifications("Browser", "Firefox");
-			configuration.addClassifications("Branch", "release/1.0");
-
-			ReportBuilder reportBuilder = new ReportBuilder(jsonFiles, configuration);
-			Reportable result = reportBuilder.generateReports();
-			// and here validate 'result' to decide what to do
-			// if report has failed features, undefined steps etc
-	    	
-	    	
-	    }
     /**
      * Public access to WebDriver object
      * @return
@@ -129,18 +94,17 @@ public class Hooks {
 
         if (driver == null){ // Initialize singleton
             if (FileWriter.getProps().getProperty(PropertyConstantsNames.BROWSER).equals(PropertyConstantsNames.FIREFOX)) {
-            	if (FileWriter.getProps().getProperty(PropertyConstantsNames.OPERATING_SYSTEM).equals(PropertyConstantsNames.WIN_64)) {
-            		System.setProperty("webdriver.gecko.driver", "..\\\\/basicSeleniumWebDriverTest/src/test/resources/geckodriver/geckodriverWin64.exe");
-            	}else if (FileWriter.getProps().getProperty(PropertyConstantsNames.OPERATING_SYSTEM).equals(PropertyConstantsNames.LINUX_64)) {
-            		System.setProperty("webdriver.gecko.driver", "..\\\\/basicSeleniumWebDriverTest/src/test/resources/geckodriver/geckodriverLinux64");
-            	}
-            	    
+            	WebDriverManager.firefoxdriver().setup();	   
                 driver = new FirefoxDriver();
             } else if (FileWriter.getProps().getProperty(PropertyConstantsNames.BROWSER).equals(PropertyConstantsNames.CHROME)) {
-            	if (FileWriter.getProps().getProperty(PropertyConstantsNames.OPERATING_SYSTEM).equals(PropertyConstantsNames.WIN_64)) {
-            		System.setProperty("webdriver.chrome.driver", "..\\\\\\\\/basicSeleniumWebDriverTest/src/test/resources/browserDrivers/chromedriver/chromedriverWin32.exe");
-            	}
+            	WebDriverManager.chromedriver().setup();	
                 driver = new ChromeDriver();
+            }else if (FileWriter.getProps().getProperty(PropertyConstantsNames.BROWSER).equals(PropertyConstantsNames.EDGE)) {
+            	WebDriverManager.edgedriver().setup();
+                driver = new EdgeDriver();
+            }else if (FileWriter.getProps().getProperty(PropertyConstantsNames.BROWSER).equals(PropertyConstantsNames.INTERNET_EXPLORER)) {
+            	WebDriverManager.iedriver().setup();
+                driver = new InternetExplorerDriver();
             }else {
                 throw new NotFoundResourceException("Not found a valid browser type at properties file. ");
             }
