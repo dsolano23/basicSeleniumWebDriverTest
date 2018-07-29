@@ -3,11 +3,17 @@ package com.dso.seleniumWebDriverTest.cucumberRunner;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
-import com.dso.seleniumWebDriverTest.stepDefinition.Hooks;
+import com.dso.seleniumWebDriverTest.enviroment.BrowserCodes;
+import com.dso.seleniumWebDriverTest.enviroment.Enviroment;
+import com.dso.seleniumWebDriverTest.enviroment.Hooks;
+import com.dso.seleniumWebDriverTest.exception.NotFoundResourceException;
+import com.dso.seleniumWebDriverTest.utilsType.FileWriter;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
@@ -33,10 +39,37 @@ import net.masterthought.cucumber.Reportable;
 				)
 
 public class TestRunner {
-	private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(Hooks.class);
+	
+	private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(TestRunner.class);
+	
+	
+		@BeforeClass
+		public static void startEnviroment() throws Exception {
+			if (FileWriter.getProps().getProperty(BrowserCodes.BROWSER) != null && FileWriter.getProps().getProperty(BrowserCodes.BROWSER) != null) {
+				String browser = FileWriter.getProps().getProperty(BrowserCodes.BROWSER);
+				String mainURL = "";
+		    	Enviroment enviroment = new Enviroment(browser, mainURL );
+		    	    	
+		    	LOGGER.debug("Generating masterthought HTML reports .......");
+		    	Hooks.setEnviroment(enviroment);
+		    	
+		        LOGGER.info("*************************************");
 
-	   @AfterClass	
-	    public static void renerateHTMLReport() throws InterruptedException {
+		        LOGGER.debug("Called openBrowser(beforeScenario)");
+
+		        // Clean all residual configuration test before each execution
+		        Hooks.getWebDriver().manage().window().maximize();
+		        Hooks.getWebDriver().manage().deleteAllCookies();
+		        Hooks.getWebDriver().manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		        
+			}
+
+		}
+		
+   
+		@AfterClass	
+	    public static void renerateHTMLReport() throws InterruptedException, NotFoundResourceException {
+			
 	        LOGGER.debug("Generating masterthought HTML reports .......");
 	        
 			File reportOutputDirectory = new File("target");
@@ -63,8 +96,8 @@ public class TestRunner {
 			Reportable result = reportBuilder.generateReports();
 			// and here validate 'result' to decide what to do
 			// if report has failed features, undefined steps etc
-	    	
 			LOGGER.debug("Generated Masterthought HTML reports");
+			Hooks.getWebDriver().close();
 	    }
     }
 
