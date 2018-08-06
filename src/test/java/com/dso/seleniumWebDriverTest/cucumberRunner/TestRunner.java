@@ -97,6 +97,7 @@ public class TestRunner {
 			// and here validate 'result' to decide what to do
 			// if report has failed features, undefined steps etc
 			LOGGER.debug("Generated Masterthought HTML reports");
+
 			Hooks.getWebDriver().close();
 	    }
     }

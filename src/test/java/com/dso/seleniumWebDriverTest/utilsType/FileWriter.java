@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
+import com.dso.seleniumWebDriverTest.enviroment.EnviromentConstantsNames;
 import com.dso.seleniumWebDriverTest.exception.NotFoundResourceException;
 
 public class FileWriter {
@@ -45,24 +46,27 @@ public class FileWriter {
     private static Properties loadProperties() throws NotFoundResourceException {
 
         InputStream input = null;
-
+        String path = EnviromentConstantsNames.PATH_ENVIROMENT_PROPERTIES;
+        String fileName = "defaultEnvironment";
+        String enviromentProperties = PropertiesDir + path + fileName + ".properties";
         try {
-            boolean exist = new File(PropertiesDir+ConstantsIDKeyNames.Path_testProperties).exists();
+
+            boolean exist = new File(enviromentProperties).exists();
             if(exist) {
-                input = new FileInputStream(PropertiesDir+ConstantsIDKeyNames.Path_testProperties);
+                input = new FileInputStream(enviromentProperties);
                 // load a properties file
                 if(FileWriter.props == null){
                     FileWriter.props = new Properties();
                 }
                 FileWriter.props.load(input);
             }else {
-                throw new NotFoundResourceException("The file "+ ConstantsIDKeyNames.Path_testProperties + " does not exists");
+                throw new NotFoundResourceException("The file "+ enviromentProperties + " does not exists");
             }
 
 
         } catch (IOException ex) {
             ex.printStackTrace();
-            throw new NotFoundResourceException(String.format("%s %s", "Error on access to"+  ConstantsIDKeyNames.Path_testProperties +" does not exists ", ex.getMessage() ));
+            throw new NotFoundResourceException(String.format("%s %s", "Error on access to"+  enviromentProperties +" does not exists ", ex.getMessage() ));
         } finally {
             if (input != null) {
                 try {
@@ -81,9 +85,11 @@ public class FileWriter {
      */
     public static void saveProps(){
         OutputStream output = null;
-
+        String path = EnviromentConstantsNames.PATH_ENVIROMENT_PROPERTIES;
+        String fileName = "defaultEnvironment";
+        String enviromentProperties = PropertiesDir + path + fileName + ".properties";
         try {
-            output = new FileOutputStream(PropertiesDir+ConstantsIDKeyNames.Path_testProperties);
+            output = new FileOutputStream(enviromentProperties);
             // Save properties to project root folder
 
             FileWriter.props.store(output, null);
