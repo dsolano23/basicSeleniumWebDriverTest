@@ -2,9 +2,10 @@ package com.dso.seleniumWebDriverTest.utilsType;
 
 
 import com.dso.seleniumWebDriverTest.exception.NotFoundResourceException;
+import com.dso.seleniumWebDriverTest.utilsType.constans.front.common.ElementAttributeKeys;
+import com.dso.seleniumWebDriverTest.utilsType.constans.front.common.WebComponentKeys;
 import org.openqa.selenium.By;
-import com.dso.seleniumWebDriverTest.utilsType.constans.WebComponentKeys;
-import com.dso.seleniumWebDriverTest.utilsType.constans.ElementAttributeKeys;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -26,10 +27,10 @@ public class WebSelector {
      */
     private static Properties getWebElemntsProps( String keyWebComponent ) throws NotFoundResourceException {
 
-        if (keyWebComponent.equalsIgnoreCase(WebComponentKeys.loginPage.name()) ) {
+        if (keyWebComponent.equalsIgnoreCase(WebComponentKeys.loginForm.name()) ) {
             if (loginForm == null){
                 loginForm = new Properties();
-                String fileName = WebComponentKeys.loginPage.name();
+                String fileName = WebComponentKeys.loginForm.name();
                 currentProp.putAll(loadWebElementProperties(fileName));
             }else {
                 currentProp.putAll(loginForm);
