@@ -42,7 +42,7 @@ public class WebSelector {
     private static Properties loadWebElementProperties(String keyWebComponent) throws NotFoundResourceException {
         Properties props2 = new Properties();
         InputStream input = null;
-        String path = "/src/main/Resources/webElementsProperties/";
+        String path = "/src/main/resources/webElementsProperties/";
 
         String webElemntsProperties = PropertiesDir + path + keyWebComponent + ".properties";
         try {
