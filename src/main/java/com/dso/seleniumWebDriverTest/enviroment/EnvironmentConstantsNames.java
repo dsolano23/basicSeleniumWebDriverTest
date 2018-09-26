@@ -6,7 +6,7 @@ package com.dso.seleniumWebDriverTest.enviroment;
 
 public class EnvironmentConstantsNames {
 
-    public static final String PATH_ENVIRONMENT_PROPERTIES = "/src/test/Resources/enviroment/";
+    public static final String PATH_ENVIRONMENT_PROPERTIES = "/src/test/resources/enviroment/";
     public static final String MAIN_URL = "mainUrl";
     public static final String ENV = "environment";
     public static final String BROWSER = "browser";
